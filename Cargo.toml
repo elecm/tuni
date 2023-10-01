@@ -31,15 +31,16 @@ futures = "0.3"
 
 [features]
 async = ["tokio", "tokio-util", "bytes", "byteorder", "futures-core"]
+route = []
 
 [[example]]
 name = "read-async"
-required-features = [ "async", "tokio/rt-multi-thread" ]
+required-features = ["async", "tokio/rt-multi-thread"]
 
 [[example]]
 name = "read-async-codec"
-required-features = [ "async", "tokio/rt-multi-thread" ]
+required-features = ["async", "tokio/rt-multi-thread"]
 
 [[example]]
 name = "ping-tun"
-required-features = [ "async", "tokio/rt-multi-thread" ]
+required-features = ["async", "tokio/rt-multi-thread"]

@@ -21,14 +21,19 @@ use std::ptr;
 use std::vec::Vec;
 
 use libc;
-use libc::{c_char, c_short};
-use libc::{AF_INET, O_RDWR, SOCK_DGRAM};
+use libc::O_RDWR;
+use libc::{c_char, c_short, AF_INET, SOCK_DGRAM};
 
 use crate::configuration::{Configuration, Layer};
 use crate::device::Device as D;
 use crate::error::*;
 use crate::platform::linux::sys::*;
 use crate::platform::posix::{Fd, SockAddr};
+
+#[cfg(all(feature = "route", target_os = "linux"))]
+use crate::route::RouteEntry;
+#[cfg(all(feature = "route", target_os = "linux"))]
+use libc::rtentry;
 
 /// A TUN device using the TUN/TAP Linux driver.
 pub struct Device {
@@ -370,6 +375,16 @@ impl D for Device {
 
             Ok(())
         }
+    }
+
+    #[cfg(all(feature = "route", target_os = "linux"))]
+    fn set_routes(&mut self, routes: &Vec<RouteEntry>) -> Result<()> {
+        for r in routes.iter() {
+            if unsafe { siocaddrt(self.ctl.as_raw_fd(), &rtentry::from(r)) } < 0 {
+                return Err(io::Error::last_os_error().into());
+            }
+        }
+        Ok(())
     }
 
     fn queue_mut(&mut self, index: usize) -> Option<&mut Self::Queue> {

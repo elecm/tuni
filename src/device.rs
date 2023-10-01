@@ -17,6 +17,8 @@ use std::net::Ipv4Addr;
 
 use crate::configuration::Configuration;
 use crate::error::*;
+#[cfg(all(feature = "route", target_os = "linux"))]
+use crate::route::RouteEntry;
 
 /// A TUN device.
 pub trait Device: Read + Write {
@@ -98,4 +100,8 @@ pub trait Device: Read + Write {
 
     /// Transforms this device into queues.
     fn queues(self) -> Vec<Self::Queue>;
+
+    /// Set routes
+    #[cfg(all(feature = "route", target_os = "linux"))]
+    fn set_routes(&mut self, routes: &Vec<RouteEntry>) -> Result<()>;
 }

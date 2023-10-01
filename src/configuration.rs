@@ -17,6 +17,8 @@ use std::os::unix::io::RawFd;
 
 use crate::address::IntoAddress;
 use crate::platform;
+#[cfg(all(feature = "route", target_os = "linux"))]
+use crate::route::RouteEntry;
 
 /// TUN interface OSI layer of operation.
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Default)]

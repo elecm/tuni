@@ -22,3 +22,6 @@ pub use self::fd::Fd;
 
 mod split;
 pub use self::split::{Reader, Writer};
+
+#[cfg(all(feature = "route", target_os = "linux"))]
+mod rtentry;
