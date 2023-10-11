@@ -49,9 +49,9 @@ impl Device {
                 return Err(Error::InvalidName);
             }
 
-            name[4..].parse()?
+            name[4..].parse::<u32>()? + 1u32
         } else {
-            0
+            0u32
         };
 
         if config.layer.filter(|l| *l != Layer::L3).is_some() {
@@ -137,6 +137,7 @@ impl Device {
     }
 
     /// Prepare a new request.
+    /// # Safety
     pub unsafe fn request(&self) -> ifreq {
         let mut req: ifreq = mem::zeroed();
         ptr::copy_nonoverlapping(
@@ -214,8 +215,8 @@ impl Write for Device {
 impl D for Device {
     type Queue = Queue;
 
-    fn name(&self) -> &str {
-        &self.name
+    fn name(&self) -> Result<String> {
+        Ok(self.name.clone())
     }
 
     // XXX: Cannot set interface name on Darwin.
