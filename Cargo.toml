@@ -45,3 +45,7 @@ required-features = ["async", "tokio/rt-multi-thread"]
 [[example]]
 name = "ping-tun"
 required-features = ["async", "tokio/rt-multi-thread"]
+
+[[example]]
+name = "routes"
+required-features = ["route"]
